@@ -12,5 +12,6 @@ namespace MiPrimeraWebDAL.Entidades
 
 
         public DateTime FechaRegistro { get; set; } // CAMPO DE BASE DE DATOS
+
     }
 }

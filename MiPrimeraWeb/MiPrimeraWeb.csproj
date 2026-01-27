@@ -10,4 +10,8 @@
     <ProjectReference Include="..\MiPrimeWebBLL\MiPrimeraWebBLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\datatables\" />
+  </ItemGroup>
+
 </Project>

@@ -93,6 +93,18 @@ namespace MiPrimeraWebBLL.Servicios.Carro
         public async Task<CustomResponse<CarroDto>> ObtenerCarroPorIdAsync(int id)
         {
             var response = new CustomResponse<CarroDto>();
+
+            var carro = _carroRepositorio.ObtenerCarroPorId(id);
+
+            if(carro is null)
+            {
+                response.esCorrecto = false;
+                response.mensaje = "El carro no existe, debe ingresarlo en el modulo..."; //IMPORTANTE
+                response.codigoStatus = 404; // Not Found
+                return response;
+            }
+
+
             response.Data = _mapper.Map<CarroDto>(_carroRepositorio.ObtenerCarroPorId(id));
             return response;
         }
