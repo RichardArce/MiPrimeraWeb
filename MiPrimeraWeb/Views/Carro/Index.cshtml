@@ -1,7 +1,26 @@
-﻿@{
+﻿@using MiPrimeraWebBLL.Dtos;
+@model List<CarroDto>
+@{
     ViewData["Title"] = "Carro Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Nueva vista de carro</h1>
-</div>
+<h1>Lista de carros</h1>
+
+<table id="tblCarro" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@* Cuidado con el nombre de los elementos *@
+@section Scripts { 
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Carro.js" asp-append-version="true"></script>
+}
+

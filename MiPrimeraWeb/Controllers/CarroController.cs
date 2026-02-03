@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MiPrimeraWebBLL.Dtos;
 using MiPrimeraWebBLL.Servicios.Carro;
+using MiPrimeraWebDAL.Repositorios.Carro;
 
 namespace MiPrimeraWeb.Controllers
 {
@@ -23,10 +24,10 @@ namespace MiPrimeraWeb.Controllers
         public async Task<IActionResult> ObtenerCarros()
         {
             var response = await _carroServicio.ObtenerCarrosAsync();
-            return View(response);
+            return Json(response);
         }
 
-        public async Task<IActionResult> AgregarCarro(CarroDto carro)
+        public async Task<IActionResult> AgregarCarro(CarroDto carro)// Model Binding //Bind es Viejo // BindNever no se usa por que se evoluciono a los DTOS(informacion optima para mostrar)
         {
             var response = await _carroServicio.AgregarCarroAsync(carro);
             return View(response);
