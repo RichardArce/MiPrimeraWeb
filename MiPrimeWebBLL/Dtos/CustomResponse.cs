@@ -15,7 +15,7 @@ namespace MiPrimeraWebBLL.Dtos
         public CustomResponse()
         {
             esCorrecto = true;
-            mensaje = "Operación realizada correctamente.";
+            mensaje = "Operación realizada correctamente."; //Operación realizada correctamente.
             codigoStatus = 200; // OK
         }
     }

@@ -6,6 +6,11 @@
 
 <h1>Lista de carros</h1>
 
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearCarro">
+    Agregar Carro
+</button>
+
+
 <table id="tblCarro" class="table table-striped" style="width:100%">
     <thead>
         <tr>
@@ -17,6 +22,12 @@
     </thead>
     <tbody></tbody>
 </table>
+
+@* Cuidado con orden de importación de las pantallas *@
+@await Html.PartialAsync("_Edit")
+@await Html.PartialAsync("_Create")
+
+
 
 @* Cuidado con el nombre de los elementos *@
 @section Scripts { 
