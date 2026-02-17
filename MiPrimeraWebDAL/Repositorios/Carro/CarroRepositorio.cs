@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MiPrimeraWebDAL.Data;
+using MiPrimeraWebDAL.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,67 +9,70 @@ namespace MiPrimeraWebDAL.Repositorios.Carro
 {
     public class CarroRepositorio : ICarroRepositorio
     {
-        private List<Entidades.Carro> carros = new List<Entidades.Carro>()
+
+
+        private readonly MiPrimeraWebDbContext _context;
+
+
+        public CarroRepositorio(MiPrimeraWebDbContext context)
         {
-            new Entidades.Carro() { Id = 1, Marca = "Toyota", Modelo = "Corolla" },
-            new Entidades.Carro() { Id = 2, Marca = "Honda", Modelo = "Civic" },
-            new Entidades.Carro() { Id = 3, Marca = "Ford", Modelo = "Focus" }
-        };
-
-        //private readonly MiPrimeraWebContext _context;
-
-
-        public void ActualizarCarro(Entidades.Carro carro)
-        {
-
-            var index = carros.FindIndex(c => c.Id == carro.Id);
-
-            // Update the stored entity (only Marca and Modelo in this model)
-            carros[index].Marca = carro.Marca;
-            carros[index].Modelo = carro.Modelo;
+            _context = context;
         }
 
-        public void AgregarCarro(Entidades.Carro carro)
+
+        public bool ActualizarCarro(Entidades.Carro carro)
         {
 
-            // Generate new Id (simple in-memory auto-increment)
-            var newId = carros.Any() ? carros.Max(c => c.Id) + 1 : 1;
+            var existing = _context.Carros.Find(carro.Id); //Buscamos el carro
 
-            // Add a copy to avoid external references modifying internal list
-            carros.Add(new Entidades.Carro
-            {
-                Id = newId,
-                Marca = carro.Marca,
-                Modelo = carro.Modelo
-            });
+            // Update only the fields that should change //Actualizamos la informacion
+            existing.Marca = carro.Marca;
+            existing.Modelo = carro.Modelo;
+
+            _context.Carros.Update(existing); //Actualizar la informacion en el contexto
+
+            // Persist changes
+            return _context.SaveChanges() > 0;//confirmamos los cambios // Si se guardo correctamente, SaveChanges devuelve un numero mayor a 0
+        }
+
+        public bool AgregarCarro(Entidades.Carro carro)
+        {
+
+            throw new NotImplementedException();
         }
         
 
-        public void EliminarCarro(int id)
+        public bool EliminarCarro(int id)
         {
-            var removed = carros.RemoveAll(c => c.Id == id);
+            var existing = _context.Carros.Find(id);
+
+            _context.Carros.Remove(existing);
+            return _context.SaveChanges() > 0;
 
         }
 
         public Entidades.Carro ObtenerCarroPorId(int id)
         {
-            var found = carros.FirstOrDefault(c => c.Id == id);
-            if (found == null) return null;
+            var found = _context.Carros
+                            .AsNoTracking()
+                            .FirstOrDefault(c => c.Id == id);
 
-            // Return a copy to avoid exposing internal list items
+            // Return a copy to avoid exposing tracked entity
             return new Entidades.Carro
             {
                 Id = found.Id,
                 Marca = found.Marca,
-                Modelo = found.Modelo
+                Modelo = found.Modelo,
+                FechaRegistro = found.FechaRegistro
             };
         }
 
         public List<Entidades.Carro> ObtenerCarros()
         {
-            return carros
-               .Select(c => new Entidades.Carro { Id = c.Id, Marca = c.Marca, Modelo = c.Modelo })
-               .ToList();
+            return _context.Carros
+                           .AsNoTracking()
+                           .Select(c => new Entidades.Carro { Id = c.Id, Marca = c.Marca, Modelo = c.Modelo, FechaRegistro = c.FechaRegistro })
+                           .ToList();
         }
     }
 }

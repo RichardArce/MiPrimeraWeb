@@ -93,6 +93,13 @@
                         });
                     }
 
+                },
+                error: function (error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.responseJSON.description,
+                        icon: 'Error',
+                    });
                 }
             });
         },

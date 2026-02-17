@@ -23,7 +23,9 @@ namespace MiPrimeraWebBLL.Servicios.Carro
         {
             var response  = new CustomResponse<CarroDto>();
 
-            if(carroDto is null) //Validaciones
+            //CUANDO PASO LAS VALIDACIONES O REGLA DE NEGOCIO, PUEDE EJECUTAR EL PROCESO NORMALMENTE
+
+            if (carroDto is null) //Validaciones
             {
                 response.esCorrecto = false;
                 response.mensaje = "El objeto carro no puede ser nulo.";
@@ -38,10 +40,17 @@ namespace MiPrimeraWebBLL.Servicios.Carro
                 return response;
             }
 
-            //CUANDO PASO LAS VALIDACIONES O REGLA DE NEGOCIO, PUEDE EJECUTAR EL PROCESO NORMALMENTE
-
+            //Que pasa si la base de datos nos response incorrecto
             var carroActualiza = _mapper.Map<MiPrimeraWebDAL.Entidades.Carro>(carroDto);
-            _carroRepositorio.ActualizarCarro(carroActualiza);
+            if (!_carroRepositorio.ActualizarCarro(carroActualiza))
+            {     
+                response.esCorrecto = false;
+                response.mensaje = "Error al actualizar el carro en la base de datos.";
+                response.codigoStatus = 500; // Internal Server Error
+                return response;
+            }
+
+            
 
 
             return response;
@@ -64,7 +73,16 @@ namespace MiPrimeraWebBLL.Servicios.Carro
 
             //Proceso
             var carroGuardar = _mapper.Map<MiPrimeraWebDAL.Entidades.Carro>(carroDto);
-            _carroRepositorio.AgregarCarro(carroGuardar);
+            if (!_carroRepositorio.AgregarCarro(carroGuardar))
+            {
+                response.esCorrecto = false;
+                response.mensaje = "Error al actualizar el carro en la base de datos.";
+                response.codigoStatus = 500; // Internal Server Error
+                return response;
+            }
+
+
+            
 
 
             return response;

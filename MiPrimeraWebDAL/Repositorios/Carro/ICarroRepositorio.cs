@@ -8,9 +8,9 @@ namespace MiPrimeraWebDAL.Repositorios.Carro
     {
         List<Entidades.Carro> ObtenerCarros();
         Entidades.Carro ObtenerCarroPorId(int id);
-        void AgregarCarro(Entidades.Carro carro);
-        void ActualizarCarro(Entidades.Carro carro);
-        void EliminarCarro(int id);
+        bool AgregarCarro(Entidades.Carro carro);
+        bool ActualizarCarro(Entidades.Carro carro);
+        bool EliminarCarro(int id);
 
     }
 }
