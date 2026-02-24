@@ -9,7 +9,7 @@ namespace MiPrimeraWebBLL.Dtos
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "La marca es obligatoria")]
+        [Required(ErrorMessage = "La marca es obligatoria")] // @DataAnnotations 
         public string Marca { get; set; }
         [Required(ErrorMessage = "La modelo es obligatorio")]
         public string Modelo { get; set; }

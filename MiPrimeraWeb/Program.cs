@@ -5,6 +5,7 @@ using MiPrimeraWebBLL;
 using MiPrimeraWebBLL.Servicios.Carro;
 using MiPrimeraWebDAL.Data;
 using MiPrimeraWebDAL.Repositorios.Carro;
+using MiPrimeraWebDAL.Repositorios.Generico;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<MiPrimeraWebDbContext>(options =>
 //  Inyeccion de dependencias de las interfaces que implementamos
 builder.Services.AddScoped<ICarroRepositorio, CarroRepositorio>  ();
 builder.Services.AddScoped<ICarroServicio, CarroServicio> (); //CONFIGURACION INICIAL DE LAS INTERFACES Y CLASES SERVICIOS Y REPOSITORIOS
+
+builder.Services.AddScoped(typeof(IRepositorioGenerico<>), typeof(RepositorioGenerico<>)); //Inyección de dependencias para el repositorio genérico, se utiliza el tipo genérico para que pueda ser utilizado con cualquier entidad, es decir, con cualquier clase que represente una tabla en la base de datos. Esto permite que el repositorio genérico pueda ser utilizado para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en cualquier entidad sin necesidad de crear un repositorio específico para cada una de ellas.
 
 
 // Inyeccion de librerias

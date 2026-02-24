@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MiPrimeraWebBLL.Dtos;
 using MiPrimeraWebDAL.Repositorios.Carro;
+using MiPrimeraWebDAL.Repositorios.Generico;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,11 +12,12 @@ namespace MiPrimeraWebBLL.Servicios.Carro
     {
         private readonly ICarroRepositorio _carroRepositorio;
         private readonly IMapper _mapper;
-
-        public CarroServicio(ICarroRepositorio carroRepositorio, IMapper mapper)
+        private readonly IRepositorioGenerico<MiPrimeraWebDAL.Entidades.Carro> _repositorioGenerico;
+        public CarroServicio(ICarroRepositorio carroRepositorio, IMapper mapper, IRepositorioGenerico<MiPrimeraWebDAL.Entidades.Carro> repositorioGenerico)
         {
             _carroRepositorio = carroRepositorio;
             _mapper = mapper;
+            _repositorioGenerico = repositorioGenerico;
         }
 
 
@@ -103,8 +105,16 @@ namespace MiPrimeraWebBLL.Servicios.Carro
             }
 
 
-            //Proceso   
-            _carroRepositorio.EliminarCarro(id);
+            _repositorioGenerico.EliminarAsync(id);
+
+            if (! await _repositorioGenerico.GuardarCambiosAsync())
+            {
+                response.esCorrecto = false;
+                response.mensaje = "Error al actualizar el carro en la base de datos.";
+                response.codigoStatus = 500; // Internal Server Error
+                return response;
+            }
+
             return response;
         }
 
