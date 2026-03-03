@@ -12,6 +12,9 @@ namespace MiPrimeraWebDAL.Repositorios.Carro
         bool ActualizarCarro(Entidades.Carro carro);
         bool EliminarCarro(int id);
 
+
+        //
+
     }
 }
 

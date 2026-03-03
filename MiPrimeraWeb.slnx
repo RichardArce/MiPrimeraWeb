@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Pruebas/">
+    <Project Path="MiPrimeraWebTest/MiPrimeraWebTest.csproj" Id="251b3a72-0c51-4d5b-be90-80dc882b8702" />
+  </Folder>
   <Project Path="MiPrimeraWeb/MiPrimeraWeb.csproj" />
   <Project Path="MiPrimeraWebDAL/MiPrimeraWebDAL.csproj" />
   <Project Path="MiPrimeWebBLL/MiPrimeraWebBLL.csproj" />

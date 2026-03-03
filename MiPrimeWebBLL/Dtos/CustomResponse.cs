@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MiPrimeraWebBLL.Dtos
 {
-    public class CustomResponse<T>
+    public class CustomResponse<T> //forma de implementación
     {
         public bool esCorrecto { get; set; }
         public string mensaje { get; set; }

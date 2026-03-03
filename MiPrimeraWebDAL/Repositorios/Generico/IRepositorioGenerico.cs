@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MiPrimeraWebDAL.Repositorios.Generico
 {
-    public interface IRepositorioGenerico<T> where T : class
+    public interface IRepositorioGenerico<T> where T : class //Clase T, es decir, cualquier clase que se le pase como tipo genérico, debe ser una clase (no puede ser un tipo primitivo como int, string, etc.). Esto asegura que el repositorio genérico solo trabaje con entidades que son clases, lo cual es común en el contexto de acceso a datos y operaciones CRUD.
     {
         Task<T> ObtenerPorIdAsync(int id);
         Task<List<T>> ObtenerTodosAsync();

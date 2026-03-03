@@ -2,20 +2,15 @@
 using MiPrimeraWebBLL.Dtos;
 using MiPrimeraWebDAL.Repositorios.Carro;
 using MiPrimeraWebDAL.Repositorios.Generico;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MiPrimeraWebBLL.Servicios.Carro
 {
     public class CarroServicio : ICarroServicio
     {
-        private readonly ICarroRepositorio _carroRepositorio;
         private readonly IMapper _mapper;
         private readonly IRepositorioGenerico<MiPrimeraWebDAL.Entidades.Carro> _repositorioGenerico;
-        public CarroServicio(ICarroRepositorio carroRepositorio, IMapper mapper, IRepositorioGenerico<MiPrimeraWebDAL.Entidades.Carro> repositorioGenerico)
+        public CarroServicio(IMapper mapper, IRepositorioGenerico<MiPrimeraWebDAL.Entidades.Carro> repositorioGenerico)
         {
-            _carroRepositorio = carroRepositorio;
             _mapper = mapper;
             _repositorioGenerico = repositorioGenerico;
         }
@@ -37,22 +32,24 @@ namespace MiPrimeraWebBLL.Servicios.Carro
             if(carroDto.Marca == "Toyota") //Regla de negocio ejemplo // CASOS DE PRUEBA
             {
                 response.esCorrecto = false;
-                response.mensaje = "No se pueden actualizar carros marca toyota";
+                response.mensaje = Constantes.Carro.NoActualizarToyota;
                 response.codigoStatus = 400; // Bad Request
                 return response;
             }
 
             //Que pasa si la base de datos nos response incorrecto
             var carroActualiza = _mapper.Map<MiPrimeraWebDAL.Entidades.Carro>(carroDto);
-            if (!_carroRepositorio.ActualizarCarro(carroActualiza))
-            {     
+            _repositorioGenerico.ActualizarAsync(carroActualiza);
+
+            if (!await _repositorioGenerico.GuardarCambiosAsync())
+            {
                 response.esCorrecto = false;
                 response.mensaje = "Error al actualizar el carro en la base de datos.";
                 response.codigoStatus = 500; // Internal Server Error
                 return response;
             }
 
-            
+
 
 
             return response;
@@ -67,25 +64,22 @@ namespace MiPrimeraWebBLL.Servicios.Carro
             if (carroDto is null)
             {
                 response.esCorrecto = false;
-                response.mensaje = "El objeto carro no puede ser nulo.";
+                response.mensaje = Constantes.Carro.Null; //Mensaje de error centralizado en la clase Constantes
                 response.codigoStatus = 400; // Bad Request
                 return response;
             }
 
-
             //Proceso
             var carroGuardar = _mapper.Map<MiPrimeraWebDAL.Entidades.Carro>(carroDto);
-            if (!_carroRepositorio.AgregarCarro(carroGuardar))
+            _repositorioGenerico.AgregarAsync(carroGuardar);
+
+            if (!await _repositorioGenerico.GuardarCambiosAsync())
             {
                 response.esCorrecto = false;
-                response.mensaje = "Error al actualizar el carro en la base de datos.";
+                response.mensaje = Constantes.Carro.ErrorGuardar;
                 response.codigoStatus = 500; // Internal Server Error
                 return response;
             }
-
-
-            
-
 
             return response;
 
@@ -110,7 +104,7 @@ namespace MiPrimeraWebBLL.Servicios.Carro
             if (! await _repositorioGenerico.GuardarCambiosAsync())
             {
                 response.esCorrecto = false;
-                response.mensaje = "Error al actualizar el carro en la base de datos.";
+                response.mensaje = Constantes.Carro.ErrorEliminar;
                 response.codigoStatus = 500; // Internal Server Error
                 return response;
             }
@@ -122,9 +116,9 @@ namespace MiPrimeraWebBLL.Servicios.Carro
         {
             var response = new CustomResponse<CarroDto>();
 
-            var carro = _carroRepositorio.ObtenerCarroPorId(id);
+            var carro = await _repositorioGenerico.ObtenerPorIdAsync(id);
 
-            if(carro is null)
+            if (carro is null)
             {
                 response.esCorrecto = false;
                 response.mensaje = "El carro no existe, debe ingresarlo en el modulo..."; //IMPORTANTE
@@ -133,14 +127,14 @@ namespace MiPrimeraWebBLL.Servicios.Carro
             }
 
 
-            response.Data = _mapper.Map<CarroDto>(_carroRepositorio.ObtenerCarroPorId(id));
+            response.Data = _mapper.Map<CarroDto>(carro);
             return response;
         }
 
         public async Task<CustomResponse<List<CarroDto>>> ObtenerCarrosAsync()
         {
             var response = new CustomResponse<List<CarroDto>>();
-            response.Data = _mapper.Map<List<CarroDto>>(_carroRepositorio.ObtenerCarros());
+            response.Data = _mapper.Map<List<CarroDto>>(await _repositorioGenerico.ObtenerTodosAsync());
             return response;
         }
     }
